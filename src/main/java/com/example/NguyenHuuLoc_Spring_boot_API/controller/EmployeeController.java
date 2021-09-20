@@ -22,7 +22,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees/{id}")
-    public Employee getEmployee(@PathVariable long id){
+    public Employee getEmployee(@PathVariable long id) throws EmployeeNotFoundException {
         return employeeService.findById(id);
     }
 
@@ -45,7 +45,5 @@ public class EmployeeController {
         employeeService.deleteById(Long.valueOf(id));
         return "Deleted employee "+ id;
     }
-
-
 
 }
