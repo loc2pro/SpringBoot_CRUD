@@ -4,11 +4,9 @@ import com.example.NguyenHuuLoc_Spring_boot_API.entity.Employee;
 import com.example.NguyenHuuLoc_Spring_boot_API.service.EmployeeService;
 import com.example.NguyenHuuLoc_Spring_boot_API.service.EmployeeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -19,7 +17,7 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
-    private EmployeeServiceImpl employeeServiceImpl;
+
 
     @GetMapping("/employees")
     public List<Employee> getListEmployee(){
@@ -33,10 +31,12 @@ public class EmployeeController {
     }
 
     @PostMapping("/employees")
-    public Employee addNewEmployee( @Valid @RequestBody Employee employee){
+    public ResponseEntity<Employee> addNewEmployee(@Valid @RequestBody Employee employee){
         employee.setId(Long.valueOf(0));
-        employeeService.saveEmployee(employee);
-        return employee;
+        return new ResponseEntity<Employee>(
+                employeeService.saveEmployee(employee),
+                HttpStatus.CREATED
+        );
     }
 
     @PutMapping("/employees")
@@ -52,5 +52,7 @@ public class EmployeeController {
         return "Deleted employee "+ id;
     }
 
-}
 
+
+
+}
