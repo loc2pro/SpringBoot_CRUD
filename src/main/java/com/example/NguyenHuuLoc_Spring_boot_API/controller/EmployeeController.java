@@ -1,5 +1,6 @@
 package com.example.NguyenHuuLoc_Spring_boot_API.controller;
 
+import com.example.NguyenHuuLoc_Spring_boot_API.dto.EmployeeDTO;
 import com.example.NguyenHuuLoc_Spring_boot_API.entity.Employee;
 import com.example.NguyenHuuLoc_Spring_boot_API.service.EmployeeService;
 import com.example.NguyenHuuLoc_Spring_boot_API.service.EmployeeServiceImpl;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,9 +22,13 @@ public class EmployeeController {
 
 
     @GetMapping("/employees")
-    public List<Employee> getListEmployee(){
-        System.out.println(employeeService.findAll());
-        return employeeService.findAll();
+    public List<EmployeeDTO> getListEmployee(){
+        List<Employee> employees = employeeService.findAll();
+        List<EmployeeDTO> dtoList = new ArrayList<>();
+        for(Employee e: employees){
+            dtoList.add(new EmployeeDTO(e));
+        }
+        return dtoList;
     }
 
     @GetMapping("/employees/{id}")
@@ -31,12 +37,10 @@ public class EmployeeController {
     }
 
     @PostMapping("/employees")
-    public ResponseEntity<Employee> addNewEmployee(@Valid @RequestBody Employee employee){
+    public Employee addNewEmployee(@Valid @RequestBody Employee employee){
         employee.setId(Long.valueOf(0));
-        return new ResponseEntity<Employee>(
-                employeeService.saveEmployee(employee),
-                HttpStatus.CREATED
-        );
+        employeeService.saveEmployee(employee);
+        return employee;
     }
 
     @PutMapping("/employees")
@@ -51,7 +55,6 @@ public class EmployeeController {
         employeeService.deleteById(Long.valueOf(id));
         return "Deleted employee "+ id;
     }
-
 
 
 
